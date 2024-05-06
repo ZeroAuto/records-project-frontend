@@ -1,6 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+import React, { useContext, useEffect, useState } from 'react';
+
+import { getHeaders } from '../utils/utils.ts';
+import { UserContext } from '../contexts/UserContext.tsx';
 
 import LoadingSpinner from '../components/LoadingSpinner.jsx';
 
@@ -13,16 +18,24 @@ interface Album {
 }
 
 const Home: React.FC = () => {
+  const { currentUser } = useContext(UserContext);
   const [loading, setLoading] = useState<Boolean>(false);
   const [records, setRecords] = useState<Record[]>([]);
 
   useEffect(() => {
     const fetchRecords = async (searchText: string = ''): Promise<any | false> => {
       try {
+        const url = currentUser ? `${process.env.NEXT_PUBLIC_API_URL}/record/user` : `${process.env.NEXT_PUBLIC_API_URL}/record`
         setLoading(true);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/record?text=${encodeURIComponent(searchText)}`);
-        const data = await res.json();
-        setRecords(data);
+        const response = await axios.get(
+          url,
+          {
+            headers: getHeaders(),
+            params: { text: searchText },
+          },
+        );
+        const records = response.data;
+        setRecords(records);
       } catch (error) {
         console.log(error);
       } finally {
@@ -31,7 +44,7 @@ const Home: React.FC = () => {
     }
 
     fetchRecords();
-  }, []);
+  }, [currentUser]);
 
   return (
     <div className="max-w-2xl mx-auto">
