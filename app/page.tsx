@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, ChangeEvent } from 'react';
 
 import { getHeaders } from '../utils/utils.ts';
 import { UserContext } from '../contexts/UserContext.tsx';
@@ -19,10 +19,16 @@ interface Album {
 
 const Home: React.FC = () => {
   const { currentUser } = useContext(UserContext);
-  const [loading, setLoading] = useState<Boolean>(false);
-  const [records, setRecords] = useState<Record[]>([]);
+  const [ loading, setLoading ] = useState<Boolean>(false);
+  const [ records, setRecords ] = useState<Record[]>([]);
+  const [ searchTerm, setSearhcTerm ] = useState<string>('');
+
+  const handleSearchTermChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearhcTerm(e.target.value);
+  }
 
   useEffect(() => {
+    const delay = searchTerm.length > 0 ? 250 : 0;
     const fetchRecords = async (searchText: string = ''): Promise<any | false> => {
       try {
         const url = currentUser ? `${process.env.NEXT_PUBLIC_API_URL}/record/user` : `${process.env.NEXT_PUBLIC_API_URL}/record`
@@ -43,11 +49,24 @@ const Home: React.FC = () => {
       }
     }
 
-    fetchRecords();
-  }, [currentUser]);
+    const getData = setTimeout(() => {
+      fetchRecords(searchTerm);
+    }, delay);
+
+    return () => clearTimeout(getData);
+  }, [currentUser, searchTerm]);
 
   return (
     <div className="max-w-2xl mx-auto">
+      <div className="flex mb-4">
+        <input
+          className="bg-gray-600 w-full p-2 border border-gray-300 rounded focus:ring focus:outline-none focus:border-blue-300"
+          onChange={handleSearchTermChange}
+          placeholder="enter search term..."
+          type="text"
+          value={searchTerm}
+        />
+      </div>
       {loading &&
         <div className="flex items-center mx-auto mb-4">
           <LoadingSpinner />
