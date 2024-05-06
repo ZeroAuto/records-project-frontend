@@ -34,14 +34,14 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <div className="max-w-2xl mx-auto">
       {loading &&
         <div className="flex items-center mx-auto mb-4">
           <LoadingSpinner />
         </div> 
       }
       {!loading && records.length > 0 &&
-        <table className="min-w-full">
+        <table className="min-w-full bg-gray-700 rounded">
           <thead>
             <tr>
               <th className="px-4 py-2">Name</th>
@@ -63,7 +63,7 @@ const Home: React.FC = () => {
           </tbody>
         </table>
       }
-    </main>
+    </div>
   );
 }
 

@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+import TopNav from '../components/TopNav.tsx';
+
+import { UserProvider } from '../contexts/UserContext.tsx';
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,7 +20,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <UserProvider>
+          <TopNav />
+            <div className="container mx-auto p-4">
+              {children}
+            </div>
+        </UserProvider>
+      </body>
     </html>
   );
 }
