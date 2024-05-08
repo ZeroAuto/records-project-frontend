@@ -37,14 +37,14 @@ const Login: React.FC = () => {
         <input
           type="text"
           placeholder="Username"
-          className="bg-gray-600 w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+          className="form-input-field"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
-          className="bg-gray-600 w-full p-2 mb-4 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+          className="form-input-field"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
