@@ -4,23 +4,17 @@ import axios from 'axios';
 
 import React, { useContext, useEffect, useState, ChangeEvent } from 'react';
 
-import { getHeaders } from '../utils/utils.ts';
+import LoadingSpinner from '../components/LoadingSpinner.jsx';
 import { UserContext } from '../contexts/UserContext.tsx';
 
-import LoadingSpinner from '../components/LoadingSpinner.jsx';
-
-interface Album {
-  id: number;
-  name: string;
-  artist: string;
-  year: number;
-  format: string;
-}
+import { Album } from '../utils/interfaces.ts';
+import { fetchRecords, fetchWishlist } from '../utils/server.ts';
+import { getHeaders } from '../utils/utils.ts';
 
 const Home: React.FC = () => {
   const { currentUser } = useContext(UserContext);
   const [ loading, setLoading ] = useState<Boolean>(false);
-  const [ records, setRecords ] = useState<Record[]>([]);
+  const [ records, setRecords ] = useState<Album[]>([]);
   const [ searchTerm, setSearhcTerm ] = useState<string>('');
 
   const handleSearchTermChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,18 +23,14 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const delay = searchTerm.length > 0 ? 250 : 0;
-    const fetchRecords = async (searchText: string = ''): Promise<any | false> => {
+    const fetchRecordData = async (searchText: string = ''): Promise<any | false> => {
       try {
-        const url = currentUser ? `${process.env.NEXT_PUBLIC_API_URL}/record/user` : `${process.env.NEXT_PUBLIC_API_URL}/record`
-        setLoading(true);
-        const response = await axios.get(
-          url,
-          {
-            headers: getHeaders(),
-            params: { text: searchText },
-          },
-        );
-        const records = response.data;
+        let records;
+        if (currentUser) {
+          records = await fetchWishlist(searchText);
+        } else {
+          records = await fetchRecords(searchText);
+        }
         setRecords(records);
       } catch (error) {
         console.log(error);
@@ -50,7 +40,7 @@ const Home: React.FC = () => {
     }
 
     const getData = setTimeout(() => {
-      fetchRecords(searchTerm);
+      fetchRecordData(searchTerm);
     }, delay);
 
     return () => clearTimeout(getData);

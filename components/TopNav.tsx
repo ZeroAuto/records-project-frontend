@@ -21,7 +21,10 @@ const TopNav: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
-            <h1 className="text-white font-bold text-lg">Records</h1>
+            <h1 
+              className="text-white font-bold text-lg hover:cursor-pointer"
+              onClick={() => router.push('/')}
+            >Records</h1>
           </div>
           {currentUser ? (
             <span className="flex items-center" onClick={logout}>

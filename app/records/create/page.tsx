@@ -2,43 +2,42 @@
 
 import axios from 'axios';
 
-import React, { useLayoutEffect, useState, FormEvent } from 'react';
+import React, { useEffect, useLayoutEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { Album, RecordParams } from '../../../utils/interfaces.ts';
+import { findRecord } from '../../../utils/server.ts';
 import { getHeaders } from '../../../utils/utils.ts';
 
 const Record: React.FC = () => {
   const router = useRouter();
+
   useLayoutEffect(() => {
     const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
     if (!userInfo) {
       router.push('/');
     }
   });
+
   const [ name, setName ] = useState<string>('');
   const [ artist, setArtist ] = useState<string>('');
   const [ year, setYear ] = useState<string>('');
   const [ format, setFormat ] = useState<string>('');
-  
-  const handleNameChange = (e: FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setName(e.target.value);
-  }
+  const [ selectedRecord, setSelectedRecord ] = useState<Album>({});
 
-  const handleArtistChange = (e: FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setName(e.target.value);
-  }
+  useEffect(() => {
+    const fetchRecordData = async (recordData: RecordParams) => {
+      if (recordData.name.length > 0 && recordData.artist.length > 0) {
+        const record = await findRecord(recordData);
+        setSelectedRecord(record);
+      }
+    };
 
-  const handleYearChange = (e: FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setName(e.target.value);
-  }
-
-  const handleFormatChange = (e: FormEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setName(e.target.value);
-  }
+    const getData = setTimeout(() => {
+      fetchRecordData({ name, artist });
+    }, 250);
+    return () => clearTimeout(getData);
+  }, [name, artist]);
 
   return (
     <div className="flex justify-center items-start h-screen">
@@ -54,7 +53,7 @@ const Record: React.FC = () => {
           type="text"
           className="form-input-field"
           id="name"
-          onChange={handleNameChange}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
           placeholder="Name"
           value={name}
         />
@@ -68,7 +67,7 @@ const Record: React.FC = () => {
           type="text"
           className="form-input-field"
           id="artist"
-          onChange={handleArtistChange}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setArtist(e.target.value)}
           placeholder="Artist"
           value={artist}
         />
@@ -82,7 +81,7 @@ const Record: React.FC = () => {
           type="text"
           className="form-input-field"
           id="format"
-          onChange={handleFormatChange}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setFormat(e.target.value)}
           placeholder="Format"
           value={format}
         />
@@ -95,7 +94,7 @@ const Record: React.FC = () => {
         <input
           type="text"
           className="form-input-field"
-          onChange={handleYearChange}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setYear(e.target.value)}
           placeholder="Year"
           value={year}
         />
