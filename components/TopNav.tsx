@@ -27,9 +27,12 @@ const TopNav: React.FC = () => {
             >Records</h1>
           </div>
           {currentUser ? (
-            <span className="flex items-center" onClick={logout}>
-              <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Sign Out</button>
-            </span>
+            <div className="flex space-x-4 items-center">
+              <span>Signed in as: {currentUser.name}</span>
+              <span className="flex" onClick={logout}>
+                <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Sign Out</button>
+              </span>
+            </div>
           ) : (
             <Link 
               className="flex items-center"
