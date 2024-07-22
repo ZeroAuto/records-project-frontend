@@ -16,11 +16,9 @@ const Home: React.FC = () => {
   const { currentUser } = useContext(UserContext);
   const [ loading, setLoading ] = useState<Boolean>(false);
   const [ records, setRecords ] = useState<Album[]>([]);
-  const [ searchTerm, setSearhcTerm ] = useState<string>('');
-
-  const handleSearchTermChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearhcTerm(e.target.value);
-  }
+  const [ searchTerm, setSearchTerm ] = useState<string>('');
+  const [ sortColumn, setSortColumn ] = useState<string>('');
+  const [ sortDirection, setSortDirection ] = useState<string>('desc');
 
   useEffect(() => {
     const delay = searchTerm.length > 0 ? 250 : 0;
@@ -48,6 +46,16 @@ const Home: React.FC = () => {
     return () => clearTimeout(getData);
   }, [currentUser, searchTerm]);
 
+  const handleSearchTermChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  }
+
+  const handleSortChange = (columnName: string) => {
+    const direction = sortColumn === columnName && sortDirection === 'asc' ? 'desc' : 'asc';
+    setSortColumn(columnName);
+    setSortDirection(direction);
+  };
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="flex justify-between mb-4">
@@ -67,11 +75,20 @@ const Home: React.FC = () => {
         <table className="min-w-full bg-gray-700 rounded">
           <thead>
             <tr>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Artist</th>
-              <th className="px-4 py-2">Year</th>
-              <th className="px-4 py-2">Format</th>
-              <th className="px-4 py-2"></th>
+              {['name', 'artist_name', 'year', 'format'].map(column => (
+                <th
+                  key={column}
+                  className="px-4 py-2 cursor-pointer"
+                  onClick={() => handleSortChange(column)}
+                >
+                  {column.charAt(0).toUpperCase() + column.slice(1)}
+                  {sortColumn === column && (
+                    <span>
+                      {sortDirection === 'asc' ? ' ↑' : ' ↓'}
+                    </span>
+                  )}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
