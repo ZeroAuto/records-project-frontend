@@ -43,3 +43,17 @@ export const fetchWishlist = async (searchText: string = ''): Promise<AxiosRespo
   );
   return res.data;
 }
+
+export const postRecord = async (recordData): Promise<AxiosResponse|false> => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}/record`,
+      { ...recordData },
+      { headers: getHeaders() },
+    );
+    return res.data;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};

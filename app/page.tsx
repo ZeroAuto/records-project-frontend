@@ -4,12 +4,11 @@ import axios from 'axios';
 
 import React, { useContext, useEffect, useState, ChangeEvent } from 'react';
 
-import LoadingSpinner from '../components/LoadingSpinner.jsx';
+import LoadingSpinner from '../components/LoadingSpinner.tsx';
 import { UserContext } from '../contexts/UserContext.tsx';
 
 import { Album } from '../utils/interfaces.ts';
 import { fetchRecords, fetchWishlist } from '../utils/server.ts';
-import { getHeaders } from '../utils/utils.ts';
 
 const Home: React.FC = () => {
   const { currentUser } = useContext(UserContext);
@@ -25,6 +24,7 @@ const Home: React.FC = () => {
     const delay = searchTerm.length > 0 ? 250 : 0;
     const fetchRecordData = async (searchText: string = ''): Promise<any | false> => {
       try {
+        setLoading(true);
         let records;
         if (currentUser) {
           records = await fetchWishlist(searchText);
@@ -58,9 +58,7 @@ const Home: React.FC = () => {
         />
       </div>
       {loading &&
-        <div className="flex items-center mx-auto mb-4">
-          <LoadingSpinner />
-        </div> 
+        <LoadingSpinner />
       }
       {!loading && records.length > 0 &&
         <table className="min-w-full bg-gray-700 rounded">
