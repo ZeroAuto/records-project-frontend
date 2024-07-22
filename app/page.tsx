@@ -3,9 +3,11 @@
 import axios from 'axios';
 
 import React, { useContext, useEffect, useState, ChangeEvent } from 'react';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
-import LoadingSpinner from '../components/LoadingSpinner.tsx';
-import { UserContext } from '../contexts/UserContext.tsx';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { UserContext } from '../contexts/UserContext';
 
 import { Album } from '../utils/interfaces.ts';
 import { fetchRecords, fetchWishlist } from '../utils/server.ts';
@@ -48,14 +50,15 @@ const Home: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="flex mb-4">
+      <div className="flex justify-between mb-4">
         <input
-          className="bg-gray-600 w-full p-2 border border-gray-300 rounded focus:ring focus:outline-none focus:border-blue-300"
+          className="bg-gray-600 p-2 border border-gray-300 rounded focus:ring focus:outline-none focus:border-blue-300"
           onChange={handleSearchTermChange}
           placeholder="enter search term..."
           type="text"
           value={searchTerm}
         />
+        <Link className="primary-button px-2" href="/records/create">Add Record</Link>
       </div>
       {loading &&
         <LoadingSpinner />
