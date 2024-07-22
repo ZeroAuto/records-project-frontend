@@ -66,7 +66,9 @@ const Home: React.FC = () => {
           type="text"
           value={searchTerm}
         />
-        <Link className="primary-button px-2" href="/records/create">Add Record</Link>
+        {currentUser &&
+          <Link className="primary-button px-2" href="/records/create">Add Record</Link>
+        }
       </div>
       {loading &&
         <LoadingSpinner />
@@ -81,12 +83,16 @@ const Home: React.FC = () => {
                   className="px-4 py-2 cursor-pointer"
                   onClick={() => handleSortChange(column)}
                 >
-                  {column.charAt(0).toUpperCase() + column.slice(1)}
-                  {sortColumn === column && (
+                  <div class="flex space-x-1">
                     <span>
-                      {sortDirection === 'asc' ? ' ↑' : ' ↓'}
+                      {column.charAt(0).toUpperCase() + column.slice(1)}
                     </span>
-                  )}
+                    {sortColumn === column && (
+                      <span>
+                        {sortDirection === 'asc' ? ' ↑' : ' ↓'}
+                      </span>
+                    )}
+                  </div>
                 </th>
               ))}
             </tr>
