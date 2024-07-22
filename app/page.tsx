@@ -17,8 +17,8 @@ const Home: React.FC = () => {
   const [ loading, setLoading ] = useState<Boolean>(false);
   const [ records, setRecords ] = useState<Album[]>([]);
   const [ searchTerm, setSearchTerm ] = useState<string>('');
-  const [ sortColumn, setSortColumn ] = useState<string>('');
-  const [ sortDirection, setSortDirection ] = useState<string>('desc');
+  const [ sortColumn, setSortColumn ] = useState<string>('name');
+  const [ sortDirection, setSortDirection ] = useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
     const delay = searchTerm.length > 0 ? 250 : 0;
@@ -27,9 +27,9 @@ const Home: React.FC = () => {
         setLoading(true);
         let records;
         if (currentUser) {
-          records = await fetchWishlist(searchText);
+          records = await fetchWishlist({searchText, sortColumn, sortDirection});
         } else {
-          records = await fetchRecords(searchText);
+          records = await fetchRecords({searchText, sortColumn, sortDirection});
         }
         setRecords(records);
       } catch (error) {
@@ -44,7 +44,7 @@ const Home: React.FC = () => {
     }, delay);
 
     return () => clearTimeout(getData);
-  }, [currentUser, searchTerm]);
+  }, [currentUser, searchTerm, sortColumn, sortDirection]);
 
   const handleSearchTermChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -75,7 +75,7 @@ const Home: React.FC = () => {
         <table className="min-w-full bg-gray-700 rounded">
           <thead>
             <tr>
-              {['name', 'artist_name', 'year', 'format'].map(column => (
+              {['name', 'artist', 'year', 'format'].map(column => (
                 <th
                   key={column}
                   className="px-4 py-2 cursor-pointer"

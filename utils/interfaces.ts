@@ -12,6 +12,12 @@ interface Album extends RecordAddParams {
   id: number;
 }
 
+interface FilterParams {
+  searchText: string,
+  sortColumn: string,
+  sortDirection: string,
+}
+
 
 export {
   Album,

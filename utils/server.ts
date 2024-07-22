@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { RecordParams } from './interfaces.ts';
+import { FilterParams, RecordParams } from './interfaces.ts';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -22,23 +22,23 @@ export const findRecord = async (recordData: RecordParams): Promise<AxiosRespons
   return res.data;
 }
 
-export const fetchRecords = async (searchText: string = ''): Promise<AxiosResponse|false> => {
+export const fetchRecords = async (filterParams: FilterParams): Promise<AxiosResponse|false> => {
   const res = await axios.get(
     `${baseUrl}/record`,
     {
       headers: getHeaders(),
-      params: { text: searchText },
+      params: { ...filterParams },
     }
   );
   return res.data;
 }
 
-export const fetchWishlist = async (searchText: string = ''): Promise<AxiosResponse|false> => {
+export const fetchWishlist = async (filterParams: FilterParams): Promise<AxiosResponse|false> => {
   const res = await axios.get(
     `${baseUrl}/record/user`,
     {
       headers: getHeaders(),
-      params: { text: searchText },
+      params: { ...filterParams },
     }
   );
   return res.data;
