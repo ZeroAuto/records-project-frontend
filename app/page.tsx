@@ -10,41 +10,57 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { UserContext } from '../contexts/UserContext';
 
 import { Album } from '../utils/interfaces.ts';
-import { fetchRecords, fetchWishlist } from '../utils/server.ts';
+import { fetchRecords, fetchUserRecords } from '../utils/server.ts';
 
 const Home: React.FC = () => {
   const { currentUser } = useContext(UserContext);
+  const [ displayCount, setDisplayCount ] = useState<number>(0);
   const [ loading, setLoading ] = useState<Boolean>(false);
   const [ records, setRecords ] = useState<Album[]>([]);
   const [ searchTerm, setSearchTerm ] = useState<string>('');
   const [ sortColumn, setSortColumn ] = useState<string>('name');
   const [ sortDirection, setSortDirection ] = useState<'asc' | 'desc'>('asc');
+  const [ totalCount, setTotalCount ] = useState<number>(0);
+
+  const fetchRecordData = async (nextPage: boolean = false): Promise<any | false> => {
+    try {
+      setLoading(true);
+      let res;
+      const offset = nextPage && displayCount < totalCount ? displayCount : 0;
+      const queryParams = {searchTerm, sortColumn, sortDirection, offset};
+      if (currentUser) {
+        res = await fetchUserRecords(queryParams);
+      } else {
+        res = await fetchRecords(queryParams);
+      }
+      setTotalCount(res.headers['x-total-count']);
+      if (nextPage && displayCount < totalCount) {
+        setDisplayCount(displayCount + res.data.length);
+        setRecords([...records, ...res.data]);
+      } else {
+        setDisplayCount(res.data.length);
+        setRecords(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     const delay = searchTerm.length > 0 ? 250 : 0;
-    const fetchRecordData = async (searchText: string = ''): Promise<any | false> => {
-      try {
-        setLoading(true);
-        let records;
-        if (currentUser) {
-          records = await fetchWishlist({searchText, sortColumn, sortDirection});
-        } else {
-          records = await fetchRecords({searchText, sortColumn, sortDirection});
-        }
-        setRecords(records);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    }
 
     const getData = setTimeout(() => {
-      fetchRecordData(searchTerm);
+      fetchRecordData();
     }, delay);
 
     return () => clearTimeout(getData);
   }, [currentUser, searchTerm, sortColumn, sortDirection]);
+
+  const handleNext = () => {
+    fetchRecordData(true);
+  };
 
   const handleSearchTermChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -70,11 +86,8 @@ const Home: React.FC = () => {
           <Link className="primary-button px-2" href="/records/create">Add Record</Link>
         }
       </div>
-      {loading &&
-        <LoadingSpinner />
-      }
-      {!loading && records.length > 0 &&
-        <table className="min-w-full bg-gray-700 rounded">
+      {records.length > 0 &&
+        <table className="min-w-full bg-gray-700 rounded mb-4">
           <thead>
             <tr>
               {['name', 'artist', 'year', 'format'].map(column => (
@@ -83,7 +96,7 @@ const Home: React.FC = () => {
                   className="px-4 py-2 cursor-pointer"
                   onClick={() => handleSortChange(column)}
                 >
-                  <div class="flex space-x-1">
+                  <div className="flex space-x-1">
                     <span>
                       {column.charAt(0).toUpperCase() + column.slice(1)}
                     </span>
@@ -108,6 +121,17 @@ const Home: React.FC = () => {
             ))}
           </tbody>
         </table>
+      }
+      {loading &&
+        <LoadingSpinner />
+      }
+      {!loading && displayCount < totalCount &&
+        <div className="flex justify-center">
+          <button
+            className="primary-button px-2"
+            onClick={handleNext}
+          >Next</button>
+        </div>
       }
     </div>
   );

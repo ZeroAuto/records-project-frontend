@@ -30,10 +30,10 @@ export const fetchRecords = async (filterParams: FilterParams): Promise<AxiosRes
       params: { ...filterParams },
     }
   );
-  return res.data;
+  return res;
 }
 
-export const fetchWishlist = async (filterParams: FilterParams): Promise<AxiosResponse|false> => {
+export const fetchUserRecords = async (filterParams: FilterParams): Promise<AxiosResponse|false> => {
   const res = await axios.get(
     `${baseUrl}/record/user`,
     {
@@ -41,7 +41,7 @@ export const fetchWishlist = async (filterParams: FilterParams): Promise<AxiosRe
       params: { ...filterParams },
     }
   );
-  return res.data;
+  return res;
 }
 
 export const postRecord = async (recordData): Promise<AxiosResponse|false> => {
