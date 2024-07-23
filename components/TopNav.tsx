@@ -34,12 +34,20 @@ const TopNav: React.FC = () => {
               </span>
             </div>
           ) : (
-            <Link 
-              className="flex items-center"
-              href="/login"
-            >
-              <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</button>
-            </Link>
+            <div className="flex space-x-4 items-center">
+              <Link 
+                className="flex items-center"
+                href="/signup"
+              >
+                <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Sign Up</button>
+              </Link>
+              <Link 
+                className="flex items-center"
+                href="/login"
+              >
+                <button className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</button>
+              </Link>
+            </div>
           )}
         </div>
       </div>

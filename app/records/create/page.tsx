@@ -68,6 +68,11 @@ const Record: React.FC = () => {
           :
           <div className="bg-gray-700 p-8 rounded-md shadow-md w-full">
             <h1 className="text-2xl mb-4">Add Record</h1>
+            {selectedRecord && (
+              <div className="mb-4 p-4 bg-green-900 text-yellow-900 rounded">
+                Record already exists: {selectedRecord.name} by {selectedRecord.artist}
+              </div>
+            )}
             <label
               className="block text-sm font-medium mb-1"
               htmlFor="name"

@@ -18,9 +18,19 @@ interface FilterParams {
   sortDirection: string,
 }
 
+interface LoginParams {
+  username: string,
+  password: string,
+}
+
+interface SignUpParams extends LoginParams {
+  email: string,
+  name: string,
+}
 
 export {
   Album,
   RecordParams,
   RecordAddParams,
+  SignUpParams,
 }
