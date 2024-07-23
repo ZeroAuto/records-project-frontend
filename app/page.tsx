@@ -22,27 +22,26 @@ const Home: React.FC = () => {
   const [ sortDirection, setSortDirection ] = useState<'asc' | 'desc'>('asc');
   const [ totalCount, setTotalCount ] = useState<number>(0);
 
-const fetchRecordData = async (nextPage: boolean = false): Promise<any | false> => {
-  try {
-    setLoading(true);
-    const offset = nextPage && displayCount < totalCount ? displayCount : 0;
-    if (!nextPage) setDisplayCount(0);
+  const fetchRecordData = async (nextPage: boolean = false): Promise<any | false> => {
+    try {
+      setLoading(true);
+      const offset = nextPage && displayCount < totalCount ? displayCount : 0;
+      if (!nextPage) setDisplayCount(0);
 
-    const queryParams = { searchTerm, sortColumn, sortDirection, offset };
-    const res = currentUser ? await fetchUserRecords(queryParams) : await fetchRecords(queryParams);
-    
-    setTotalCount(res.headers['x-total-count']);
+      const queryParams = { searchTerm, sortColumn, sortDirection, offset };
+      const res = currentUser ? await fetchUserRecords(queryParams) : await fetchRecords(queryParams);
+      
+      setTotalCount(res.headers['x-total-count']);
 
-    const newRecords = nextPage && displayCount < totalCount ? [...records, ...res.data] : res.data;
-    setDisplayCount(newRecords.length);
-    setRecords(newRecords);
-
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setLoading(false);
-  }
-};
+      const newRecords = nextPage && displayCount < totalCount ? [...records, ...res.data] : res.data;
+      setDisplayCount(newRecords.length);
+      setRecords(newRecords);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const delay = searchTerm.length > 0 ? 250 : 0;
