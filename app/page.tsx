@@ -22,31 +22,27 @@ const Home: React.FC = () => {
   const [ sortDirection, setSortDirection ] = useState<'asc' | 'desc'>('asc');
   const [ totalCount, setTotalCount ] = useState<number>(0);
 
-  const fetchRecordData = async (nextPage: boolean = false): Promise<any | false> => {
-    try {
-      setLoading(true);
-      let res;
-      const offset = nextPage && displayCount < totalCount ? displayCount : 0;
-      const queryParams = {searchTerm, sortColumn, sortDirection, offset};
-      if (currentUser) {
-        res = await fetchUserRecords(queryParams);
-      } else {
-        res = await fetchRecords(queryParams);
-      }
-      setTotalCount(res.headers['x-total-count']);
-      if (nextPage && displayCount < totalCount) {
-        setDisplayCount(displayCount + res.data.length);
-        setRecords([...records, ...res.data]);
-      } else {
-        setDisplayCount(res.data.length);
-        setRecords(res.data);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+const fetchRecordData = async (nextPage: boolean = false): Promise<any | false> => {
+  try {
+    setLoading(true);
+    const offset = nextPage && displayCount < totalCount ? displayCount : 0;
+    if (!nextPage) setDisplayCount(0);
+
+    const queryParams = { searchTerm, sortColumn, sortDirection, offset };
+    const res = currentUser ? await fetchUserRecords(queryParams) : await fetchRecords(queryParams);
+    
+    setTotalCount(res.headers['x-total-count']);
+
+    const newRecords = nextPage && displayCount < totalCount ? [...records, ...res.data] : res.data;
+    setDisplayCount(newRecords.length);
+    setRecords(newRecords);
+
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
   }
+};
 
   useEffect(() => {
     const delay = searchTerm.length > 0 ? 250 : 0;
@@ -86,7 +82,7 @@ const Home: React.FC = () => {
           <Link className="primary-button px-2" href="/records/create">Add Record</Link>
         }
       </div>
-      {records.length > 0 &&
+      {displayCount > 0 &&
         <table className="min-w-full bg-gray-700 rounded mb-4">
           <thead>
             <tr>
