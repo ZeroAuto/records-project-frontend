@@ -68,9 +68,9 @@ const Record: React.FC = () => {
           :
           <div className="bg-gray-700 p-8 rounded-md shadow-md w-full">
             <h1 className="text-2xl mb-4">Add Record</h1>
-            {selectedRecord && (
-              <div className="mb-4 p-4 bg-green-900 text-yellow-900 rounded">
-                Record already exists: {selectedRecord.name} by {selectedRecord.artist}
+            {Object.keys(selectedRecord).length > 0 && (
+              <div className="mb-4 p-4 bg-green-300 text-green-900 rounded border-green-900">
+                Record already exists: {selectedRecord.name} by {selectedRecord.artist_name} would you like to add it to your <span className="underline cursor-pointer">wishlist?</span>
               </div>
             )}
             <label
