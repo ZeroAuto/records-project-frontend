@@ -2,13 +2,14 @@
 
 import axios from 'axios';
 
-import React, { useEffect, useLayoutEffect, useState, ChangeEvent, FormEvent } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 import LoadingSpinner from '../../../components/LoadingSpinner';
+import { UserContext } from '../../../contexts/UserContext'
 
 import { Album, RecordParams } from '../../../utils/interfaces.ts';
-import { findRecord, postRecord } from '../../../utils/server.ts';
+import { findRecord, postAddRecord, postRecord } from '../../../utils/server.ts';
 
 const Record: React.FC = () => {
   const router = useRouter();
@@ -20,6 +21,7 @@ const Record: React.FC = () => {
     }
   });
 
+  const { currentUser } = useContext(UserContext);
   const [loading, setLoading] = useState<Boolean>(false);
   const [name, setName] = useState<string>('');
   const [artist, setArtist] = useState<string>('');
@@ -32,6 +34,8 @@ const Record: React.FC = () => {
       if (recordData.name.length > 0 && recordData.artist.length > 0) {
         const record = await findRecord(recordData);
         setSelectedRecord(record);
+      } else {
+        setSelectedRecord({});
       }
     };
 
@@ -40,6 +44,18 @@ const Record: React.FC = () => {
     }, 250);
     return () => clearTimeout(getData);
   }, [name, artist]);
+
+  const handleWishlist = async (purchased: boolean = false) => {
+    try {
+      setLoading(true);
+      const record = await postAddRecord(selectedRecord.id, purchased);
+      if (record) router.push('/');
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAdd = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -68,11 +84,31 @@ const Record: React.FC = () => {
           :
           <div className="bg-gray-700 p-8 rounded-md shadow-md w-full">
             <h1 className="text-2xl mb-4">Add Record</h1>
-            {Object.keys(selectedRecord).length > 0 && (
-              <div className="mb-4 p-4 bg-green-300 text-green-900 rounded border-green-900">
-                Record already exists: {selectedRecord.name} by {selectedRecord.artist_name} would you like to add it to your <span className="underline cursor-pointer">wishlist?</span>
-              </div>
-            )}
+            {Object.keys(selectedRecord).length > 0 ? 
+              !selectedRecord.owned_by_user ?
+                (
+                  <div className="mb-4 p-4 bg-green-300 text-green-900 rounded border-green-900">
+                    Record already exists: {selectedRecord.name} by {selectedRecord.artist_name}. Would you like to add it to your&nbsp;
+                    <span
+                      className="underline cursor-pointer"
+                      onClick={() => handleWishlist(false)}
+                    >wishlist&nbsp;</span>
+                      or&nbsp;
+                    <span
+                      className="underline cursor-pointer"
+                      onClick={() => handleWishlist(true)}
+                    >
+                      purchased list?
+                    </span>
+                  </div>
+                )
+                :
+                <div className="mb-4 p-4 bg-red-300 text-red-900 rounded border-red-900">
+                  <span>This record is already in your lists</span>
+                </div>
+              :
+              null
+            }
             <label
               className="block text-sm font-medium mb-1"
               htmlFor="name"
@@ -130,6 +166,7 @@ const Record: React.FC = () => {
             />
             <button
               className="w-full primary-button"
+              disabled={Object.keys(selectedRecord).length > 0}
               onClick={handleAdd}
             >
               Add

@@ -59,6 +59,22 @@ export const postRecord = async (recordData): Promise<AxiosResponse|false> => {
   }
 };
 
+export const postAddRecord = async (
+  recordId: number,
+  purchased: boolean = false
+): Promise<AxiosResponse|false> => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}/record/add/${recordId}`,
+      { purchased },
+      { headers: getHeaders() },
+    )
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
 export const signup = async (signUpData: SignUpParams): Promise<AxiosResponse|false> => {
   try {
     const res = await axios.post(
