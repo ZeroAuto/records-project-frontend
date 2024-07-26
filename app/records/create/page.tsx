@@ -67,6 +67,7 @@ const Record: React.FC = () => {
         artist: artist,
         year: year,
         format: format,
+        purchased: purchased,
       }
       const record = await postRecord(recordData);
       if (record) router.push('/');

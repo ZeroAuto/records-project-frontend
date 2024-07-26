@@ -3,13 +3,13 @@ interface RecordParams {
   artist: string;
 }
 
-interface RecordAddParams extends RecordParams {
+interface RecordPostParams extends RecordParams {
   format: string;
   year: number;
   purchased: boolean,
 }
 
-interface Album extends RecordAddParams {
+interface Album extends RecordPostParams {
   id: number;
 }
 
@@ -32,6 +32,6 @@ interface SignUpParams extends LoginParams {
 export {
   Album,
   RecordParams,
-  RecordAddParams,
+  RecordPostParams,
   SignUpParams,
 }

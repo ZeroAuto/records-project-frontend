@@ -20,6 +20,7 @@ const Home: React.FC = () => {
   const [ searchTerm, setSearchTerm ] = useState<string>('');
   const [ sortColumn, setSortColumn ] = useState<string>('name');
   const [ sortDirection, setSortDirection ] = useState<'asc' | 'desc'>('asc');
+  const [ queryType, setQueryType ] = useState<string>('all');
   const [ totalCount, setTotalCount ] = useState<number>(0);
 
   const fetchRecordData = useCallback(async (nextPage: boolean = false): Promise<any | false> => {
@@ -29,6 +30,8 @@ const Home: React.FC = () => {
       if (!nextPage) setDisplayCount(0);
 
       const queryParams = { searchTerm, sortColumn, sortDirection, offset };
+      if (queryType !== 'all' && currentUser) queryParams.purchased = queryType === 'purchased';
+      console.log(queryParams);
       const res = currentUser ? await fetchUserRecords(queryParams) : await fetchRecords(queryParams);
       
       setTotalCount(res.headers['x-total-count']);
@@ -41,7 +44,7 @@ const Home: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  });
+  }, [currentUser, searchTerm, sortColumn, sortDirection, displayCount, totalCount, queryType]);
 
   useEffect(() => {
     const delay = searchTerm.length > 0 ? 250 : 0;
@@ -51,7 +54,7 @@ const Home: React.FC = () => {
     }, delay);
 
     return () => clearTimeout(getData);
-  }, [currentUser, searchTerm, sortColumn, sortDirection]);
+  }, [currentUser, searchTerm, sortColumn, sortDirection, queryType]);
 
   const handleNext = () => {
     fetchRecordData(true);
@@ -67,6 +70,10 @@ const Home: React.FC = () => {
     setSortDirection(direction);
   };
 
+  const handleQueryTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setQueryType(e.target.value);
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="flex justify-between mb-4">
@@ -81,6 +88,40 @@ const Home: React.FC = () => {
           <Link className="primary-button px-2" href="/records/create">Add Record</Link>
         }
       </div>
+      {currentUser &&
+        <div className="flex justify-center mb-4">
+          <label className="mr-4">
+            <input
+              type="radio"
+              name="filter"
+              value="all"
+              checked={queryType === 'all'}
+              onChange={handleQueryTypeChange}
+            />
+            All
+          </label>
+          <label className="mr-4">
+            <input
+              type="radio"
+              name="filter"
+              value="wishlist"
+              checked={queryType === 'wishlist'}
+              onChange={handleQueryTypeChange}
+            />
+            Wishlist
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="filter"
+              value="purchased"
+              checked={queryType === 'purchased'}
+              onChange={handleQueryTypeChange}
+            />
+            Purchased
+          </label>
+        </div>
+      }
       {displayCount > 0 &&
         <table className="min-w-full bg-gray-700 rounded mb-4">
           <thead>
