@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-import React, { useContext, useEffect, useState, ChangeEvent } from 'react';
+import React, { useCallback, useContext, useEffect, useState, ChangeEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
@@ -22,7 +22,7 @@ const Home: React.FC = () => {
   const [ sortDirection, setSortDirection ] = useState<'asc' | 'desc'>('asc');
   const [ totalCount, setTotalCount ] = useState<number>(0);
 
-  const fetchRecordData = async (nextPage: boolean = false): Promise<any | false> => {
+  const fetchRecordData = useCallback(async (nextPage: boolean = false): Promise<any | false> => {
     try {
       setLoading(true);
       const offset = nextPage && displayCount < totalCount ? displayCount : 0;
@@ -41,7 +41,7 @@ const Home: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  });
 
   useEffect(() => {
     const delay = searchTerm.length > 0 ? 250 : 0;

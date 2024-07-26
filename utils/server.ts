@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { FilterParams, RecordParams, SignUpParams } from './interfaces.ts';
+import { FilterParams, RecordParams, RecordPostParams, SignUpParams } from './interfaces.ts';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -45,7 +45,7 @@ export const fetchUserRecords = async (filterParams: FilterParams): Promise<Axio
   return res;
 }
 
-export const postRecord = async (recordData): Promise<AxiosResponse|false> => {
+export const postRecord = async (recordData: RecordPostParams): Promise<AxiosResponse|false> => {
   try {
     const res = await axios.post(
       `${baseUrl}/record`,

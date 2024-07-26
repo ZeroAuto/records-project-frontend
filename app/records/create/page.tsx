@@ -22,12 +22,13 @@ const Record: React.FC = () => {
   });
 
   const { currentUser } = useContext(UserContext);
-  const [loading, setLoading] = useState<Boolean>(false);
-  const [name, setName] = useState<string>('');
-  const [artist, setArtist] = useState<string>('');
-  const [year, setYear] = useState<string>('');
-  const [format, setFormat] = useState<string>('');
-  const [selectedRecord, setSelectedRecord] = useState<Album>({});
+  const [ loading, setLoading ] = useState<Boolean>(false);
+  const [ name, setName ] = useState<string>('');
+  const [ artist, setArtist ] = useState<string>('');
+  const [ year, setYear ] = useState<string>('');
+  const [ format, setFormat ] = useState<string>('');
+  const [ purchased, setPurchased ] = useState<boolean>(false);
+  const [ selectedRecord, setSelectedRecord ] = useState<Album>({});
 
   useEffect(() => {
     const fetchRecordData = async (recordData: RecordParams) => {
@@ -164,6 +165,18 @@ const Record: React.FC = () => {
               placeholder="Year"
               value={year}
             />
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                id="wishlist"
+                className="mr-2"
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setPurchased(e.target.checked)}
+                checked={purchased}
+              />
+              <label htmlFor="wishlist" className="text-sm">
+                I own this record
+              </label>
+            </div>
             <button
               className="w-full primary-button"
               disabled={Object.keys(selectedRecord).length > 0}

@@ -6,6 +6,7 @@ interface RecordParams {
 interface RecordAddParams extends RecordParams {
   format: string;
   year: number;
+  purchased: boolean,
 }
 
 interface Album extends RecordAddParams {
