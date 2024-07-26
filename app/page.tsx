@@ -115,7 +115,7 @@ const Home: React.FC = () => {
               type="radio"
               name="filter"
               value="purchased"
-              checked={queryType === 'purchased'}
+              checked={queryType === 'collection'}
               onChange={handleQueryTypeChange}
             />
             Purchased
