@@ -175,7 +175,7 @@ const Record: React.FC = () => {
                 checked={purchased}
               />
               <label htmlFor="wishlist" className="text-sm">
-                I own this record
+                Add to Collection
               </label>
             </div>
             <button

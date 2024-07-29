@@ -3,6 +3,52 @@ import { FilterParams, RecordParams, RecordPostParams, SignUpParams } from './in
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
+    const refreshToken = JSON.parse(sessionStorage.getItem('user'))?.refresh_token;
+
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      !originalRequest._retry &&
+      refreshToken
+    ) {
+      originalRequest._retry = true;
+
+      try {
+        const response = await fetch(`${baseUrl}/refresh`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${refreshToken}`,
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          sessionStorage.setItem('user', JSON.stringify(data));
+          axios.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
+          originalRequest.headers['Authorization'] = `Bearer ${data.access_token}`;
+
+          return axios(originalRequest);
+        } else {
+          sessionStorage.removeItem('user');
+          return Promise.reject(error);
+        }
+      } catch (refreshError) {
+        sessionStorage.removeItem('user');
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 export const getHeaders = () => {
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
   if (userInfo && userInfo.access_token) {
