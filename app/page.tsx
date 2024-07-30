@@ -30,7 +30,6 @@ const Home: React.FC = () => {
 
       const queryParams = { searchTerm, sortColumn, sortDirection, offset };
       if (queryType !== 'all' && currentUser) queryParams.purchased = queryType === 'purchased';
-      console.log(queryParams);
       const res = currentUser ? await fetchUserRecords(queryParams) : await fetchRecords(queryParams);
       
       setTotalCount(res.headers['x-total-count']);

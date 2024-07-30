@@ -9,7 +9,7 @@ axios.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    const refreshToken = JSON.parse(sessionStorage.getItem('user'))?.refresh_token;
+    const refreshToken = JSON.parse(sessionStorage.getItem('userInfo'))?.refresh_token;
 
     if (
       error.response &&
@@ -30,17 +30,17 @@ axios.interceptors.response.use(
         const data = await response.json();
 
         if (response.ok) {
-          sessionStorage.setItem('user', JSON.stringify(data));
+          sessionStorage.setItem('userInfo', JSON.stringify(data));
           axios.defaults.headers.common['Authorization'] = `Bearer ${data.access_token}`;
           originalRequest.headers['Authorization'] = `Bearer ${data.access_token}`;
 
           return axios(originalRequest);
         } else {
-          sessionStorage.removeItem('user');
+          sessionStorage.removeItem('userInfo');
           return Promise.reject(error);
         }
       } catch (refreshError) {
-        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('userInfo');
         return Promise.reject(refreshError);
       }
     }
@@ -65,7 +65,6 @@ export const findRecord = async (recordData: RecordParams): Promise<AxiosRespons
       params: { ...recordData },
     }
   );
-  console.log(res.data);
   return res.data;
 }
 
