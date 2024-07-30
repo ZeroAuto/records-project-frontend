@@ -1,7 +1,6 @@
 'use client';
 
 import axios from 'axios';
-
 import React, { useCallback, useContext, useEffect, useState, ChangeEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -70,8 +69,8 @@ const Home: React.FC = () => {
     setSortDirection(direction);
   };
 
-  const handleQueryTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setQueryType(e.target.value);
+  const handleQueryTypeChange = (value: string) => {
+    setQueryType(value);
   }
 
   return (
@@ -89,37 +88,16 @@ const Home: React.FC = () => {
         }
       </div>
       {currentUser &&
-        <div className="flex justify-center mb-4">
-          <label className="mr-4">
-            <input
-              type="radio"
-              name="filter"
-              value="all"
-              checked={queryType === 'all'}
-              onChange={handleQueryTypeChange}
-            />
-            All
-          </label>
-          <label className="mr-4">
-            <input
-              type="radio"
-              name="filter"
-              value="wishlist"
-              checked={queryType === 'wishlist'}
-              onChange={handleQueryTypeChange}
-            />
-            Wishlist
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="filter"
-              value="purchased"
-              checked={queryType === 'collection'}
-              onChange={handleQueryTypeChange}
-            />
-            Purchased
-          </label>
+        <div className="flex justify-center mb-4 space-x-4">
+          {['all', 'wishlist', 'purchased'].map(type => (
+            <button
+              key={type}
+              className={`px-4 py-2 rounded ${queryType === type ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+              onClick={() => handleQueryTypeChange(type)}
+            >
+              {type === 'purchased' ? 'Collection' : type.charAt(0).toUpperCase() + type.slice(1)}
+            </button>
+          ))}
         </div>
       }
       {displayCount > 0 &&
@@ -166,11 +144,11 @@ const Home: React.FC = () => {
           <button
             className="primary-button px-2"
             onClick={handleNext}
-          >Next</button>
+          >Next Page</button>
         </div>
       }
     </div>
   );
 }
 
-export default Home; 
+export default Home;
