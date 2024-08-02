@@ -105,13 +105,13 @@ export const postRecord = async (recordData: RecordPostParams): Promise<AxiosRes
 };
 
 export const postAddRecord = async (
-  recordId: number,
+  record_id: number,
   purchased: boolean = false
 ): Promise<AxiosResponse|false> => {
   try {
     const res = await axios.post(
-      `${baseUrl}/record/add/${recordId}`,
-      { purchased },
+      `${baseUrl}/record/add/`,
+      { purchased, record_id },
       { headers: getHeaders() },
     )
   } catch (e) {

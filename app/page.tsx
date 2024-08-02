@@ -121,6 +121,9 @@ const Home: React.FC = () => {
                   </div>
                 </th>
               ))}
+              {currentUser && 
+                <th className="px-4 py-2">Actions</th>
+              }
             </tr>
           </thead>
           <tbody>
@@ -130,10 +133,36 @@ const Home: React.FC = () => {
                 <td className="px-4 py-2">{record.artist_name}</td>
                 <td className="px-4 py-2">{record.year}</td>
                 <td className="px-4 py-2">{record.format}</td>
+                {currentUser &&
+                  <td className="px-4 py-2">
+                    <div className="flex space-x-2">
+                      {!record.users_records_id || record.purchased === true ?
+                        <button className="p-1 bg-blue-500 text-white rounded">Wishlist</button>
+                        :
+                        null
+                      }
+                      {!record.users_records_id || record.purchased === false ?
+                        <button className="p-1 bg-blue-500 text-white rounded">Buy</button>
+                        :
+                        null
+                      }
+                      {record.users_records_id &&
+                        <button className="p-1 bg-red-500 text-white rounded">Remove</button>
+                      }
+                    </div>
+                  </td>
+                }
               </tr>
             ))}
           </tbody>
         </table>
+      }
+      {displayCount === 0 && !loading &&
+        <div className="flex justify-center">
+          <h2 className="text-2xl">
+            Nothing here
+          </h2>
+        </div>
       }
       {loading &&
         <LoadingSpinner />
