@@ -94,14 +94,17 @@ const Record: React.FC = () => {
                     <span
                       className="underline cursor-pointer"
                       onClick={() => handleWishlist(false)}
-                    >wishlist&nbsp;</span>
-                      or&nbsp;
+                    >
+                      wishlist&nbsp;
+                    </span>
+                    or&nbsp;
                     <span
                       className="underline cursor-pointer"
                       onClick={() => handleWishlist(true)}
                     >
-                      purchased list?
+                      purchased&nbsp;
                     </span>
+                    list?
                   </div>
                 )
                 :

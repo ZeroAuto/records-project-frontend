@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { UserContext } from '../contexts/UserContext';
 
 import { Album } from '../utils/interfaces.ts';
-import { fetchRecords, fetchUserRecords } from '../utils/server.ts';
+import { fetchRecords, fetchUserRecords, removeUserRecord } from '../utils/server.ts';
 
 const Home: React.FC = () => {
   const { currentUser } = useContext(UserContext);
@@ -71,6 +71,28 @@ const Home: React.FC = () => {
   const handleQueryTypeChange = (value: string) => {
     setQueryType(value);
   }
+
+  // const handleBuy = async ()
+
+  const handleRemove = async (user_record_id: number) => {
+    const userRecord = await removeUserRecord(user_record_id);
+    if (queryType !== 'all') removeRecordFromTable(userRecord.record_id);
+    if (queryType === 'all') {
+      setRecords(prev => prev.filter(record => {
+        if (record.id === userRecord.record_id) {
+          record.users_records_id = null;
+          record.purchased = null;
+        }
+        return record;
+      }));
+    }
+  }
+
+  const removeRecordFromTable = (record_id: number) => {
+    setRecords(records => records.filter(record => record.id !== record_id));
+    setDisplayCount(prev => prev --);
+    setTotalCount(prev => prev --);
+  };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -147,7 +169,10 @@ const Home: React.FC = () => {
                         null
                       }
                       {record.users_records_id &&
-                        <button className="p-1 bg-red-500 text-white rounded">Remove</button>
+                        <button
+                          className="p-1 bg-red-500 text-white rounded"
+                          onClick={() => handleRemove(record.users_records_id)}
+                        >Remove</button>
                       }
                     </div>
                   </td>

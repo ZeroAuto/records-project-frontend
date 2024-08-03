@@ -110,10 +110,20 @@ export const postAddRecord = async (
 ): Promise<AxiosResponse|false> => {
   try {
     const res = await axios.post(
-      `${baseUrl}/user_record/add`,
+      `${baseUrl}/user_record`,
       { purchased, record_id },
       { headers: getHeaders() },
     )
+    return res.data;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
+export const removeUserRecord = async (user_record_id: number) => {
+  try {
+    const res = await axios.delete(`${baseUrl}/user_record/${user_record_id}`);
     return res.data;
   } catch (e) {
     console.log(e);
