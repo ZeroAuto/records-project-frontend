@@ -9,7 +9,7 @@ import LoadingSpinner from '../../../components/LoadingSpinner';
 import { UserContext } from '../../../contexts/UserContext'
 
 import { Album, RecordParams } from '../../../utils/interfaces.ts';
-import { findRecord, postAddRecord, postRecord } from '../../../utils/server.ts';
+import { findRecord, postUserRecord, postRecord } from '../../../utils/server.ts';
 
 const Record: React.FC = () => {
   const router = useRouter();
@@ -49,7 +49,7 @@ const Record: React.FC = () => {
   const handleWishlist = async (purchased: boolean = false) => {
     try {
       setLoading(true);
-      const record = await postAddRecord(selectedRecord.id, purchased);
+      const record = await postUserRecord(selectedRecord.id, purchased);
       if (record) router.push('/');
     } catch (error) {
       console.log(error);

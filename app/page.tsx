@@ -72,7 +72,9 @@ const Home: React.FC = () => {
     setQueryType(value);
   }
 
-  // const handleBuy = async ()
+  // const handleBuy = async (
+  //
+  // )
 
   const handleRemove = async (user_record_id: number) => {
     const userRecord = await removeUserRecord(user_record_id);
@@ -157,14 +159,14 @@ const Home: React.FC = () => {
                 <td className="px-4 py-2">{record.format}</td>
                 {currentUser &&
                   <td className="px-4 py-2">
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-2 justify-between">
                       {!record.users_records_id || record.purchased === true ?
                         <button className="p-1 bg-blue-500 text-white rounded">Wishlist</button>
                         :
                         null
                       }
                       {!record.users_records_id || record.purchased === false ?
-                        <button className="p-1 bg-blue-500 text-white rounded">Buy</button>
+                        <button className="p-1 bg-green-500 text-white rounded">Buy</button>
                         :
                         null
                       }

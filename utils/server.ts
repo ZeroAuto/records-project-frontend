@@ -104,7 +104,7 @@ export const postRecord = async (recordData: RecordPostParams): Promise<AxiosRes
   }
 };
 
-export const postAddRecord = async (
+export const postUserRecord = async (
   record_id: number,
   purchased: boolean = false
 ): Promise<AxiosResponse|false> => {
