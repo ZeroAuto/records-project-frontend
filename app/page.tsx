@@ -21,15 +21,23 @@ const Home: React.FC = () => {
   const [ sortDirection, setSortDirection ] = useState<'asc' | 'desc'>('asc');
   const [ queryType, setQueryType ] = useState<string>('all');
   const [ totalCount, setTotalCount ] = useState<number>(0);
+  const [ limit, setLimit ] = useState<number>(20);
 
   const fetchRecordData = useCallback(async (nextPage: boolean = false): Promise<any | false> => {
     try {
       setLoading(true);
+      let tempLimit = limit;
+
+      if (!nextPage) {
+        const windowHeight = window.innerHeight - 300;
+        tempLimit = Math.floor(currentUser ? windowHeight / 48 : windowHeight / 40);
+        setLimit(tempLimit);
+      }
+
       const offset = nextPage && displayCount < totalCount ? displayCount : 0;
       if (!nextPage) setDisplayCount(0);
-      const limit = currentUser ? 15 : 20;
 
-      const queryParams = { searchTerm, sortColumn, sortDirection, offset, limit };
+      const queryParams = { searchTerm, sortColumn, sortDirection, offset, limit: tempLimit };
       if (queryType !== 'all' && currentUser) queryParams.purchased = queryType === 'purchased';
       const res = currentUser ? await fetchUserRecords(queryParams) : await fetchRecords(queryParams);
       
@@ -115,7 +123,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-3xl mx-auto">
       <div className="flex justify-between mb-4">
         <input
           className="bg-gray-600 p-2 border border-gray-300 rounded focus:ring focus:outline-none focus:border-blue-300"
@@ -171,8 +179,8 @@ const Home: React.FC = () => {
           <tbody>
             {records.map(record => (
               <tr key={record.id}>
-                <td className="px-4 py-2">{record.name}</td>
-                <td className="px-4 py-2">{record.artist_name}</td>
+                <td className="px-4 py-2 max-w-72 overflow-hidden whitespace-nowrap hover:overflow-visible hover:whitespace-normal">{record.name}</td>
+                <td className="px-4 py-2 max-w-64 overflow-hidden whitespace-nowrap hover:overflow-visible hover:whitespace-normal">{record.artist_name}</td>
                 <td className="px-4 py-2">{record.year}</td>
                 <td className="px-4 py-2">{record.format}</td>
                 {currentUser &&
