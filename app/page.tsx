@@ -8,8 +8,8 @@ import Link from 'next/link';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { UserContext } from '../contexts/UserContext';
 
-import { Album } from '../utils/interfaces.ts';
-import { fetchRecords, fetchUserRecords, removeUserRecord } from '../utils/server.ts';
+import { Album, RecordPostParams, UserRecord } from '../utils/interfaces.ts';
+import { fetchRecords, fetchUserRecords, postUserRecord, removeUserRecord, updateUserRecord } from '../utils/server.ts';
 
 const Home: React.FC = () => {
   const { currentUser } = useContext(UserContext);
@@ -54,6 +54,23 @@ const Home: React.FC = () => {
     return () => clearTimeout(getData);
   }, [currentUser, searchTerm, sortColumn, sortDirection, queryType]);
 
+  const updateSingleRecord = (recordId: number, userRecord: UserRecord | false = false) => {
+    setRecords(prev => {
+      const record = prev.find(record => record.id === recordId);
+      if (record) {
+        record.users_records_id = userRecord?.id ?? null;
+        record.purchased = userRecord?.purchased ?? null;
+      }
+      return [...prev];
+    });
+  };
+
+  const removeRecordFromTable = (record_id: number) => {
+    setRecords(records => records.filter(record => record.id !== record_id));
+    setDisplayCount(prev => prev --);
+    setTotalCount(prev => prev --);
+  };
+
   const handleNext = () => {
     fetchRecordData(true);
   };
@@ -72,29 +89,29 @@ const Home: React.FC = () => {
     setQueryType(value);
   }
 
-  // const handleBuy = async (
-  //
-  // )
+  const handleAddToList = async (record: RecordPostParams, purchased: boolean) => {
+    let userRecord;
+    if (record.users_records_id) {
+      userRecord = await updateUserRecord(
+        record.users_records_id,
+        {
+          record_id: record.id,
+          user_id: record.user_id,
+          purchased: purchased,
+        }
+      );
+    } else {
+      userRecord = await postUserRecord(record.id, purchased);
+    }
+    if (queryType !== 'all') removeRecordFromTable(record.id);
+    if (queryType === 'all') updateSingleRecord(record.id, userRecord);
+  };
 
   const handleRemove = async (user_record_id: number) => {
     const userRecord = await removeUserRecord(user_record_id);
     if (queryType !== 'all') removeRecordFromTable(userRecord.record_id);
-    if (queryType === 'all') {
-      setRecords(prev => prev.filter(record => {
-        if (record.id === userRecord.record_id) {
-          record.users_records_id = null;
-          record.purchased = null;
-        }
-        return record;
-      }));
-    }
+    if (queryType === 'all') updateSingleRecord(userRecord.record_id);
   }
-
-  const removeRecordFromTable = (record_id: number) => {
-    setRecords(records => records.filter(record => record.id !== record_id));
-    setDisplayCount(prev => prev --);
-    setTotalCount(prev => prev --);
-  };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -161,12 +178,18 @@ const Home: React.FC = () => {
                   <td className="px-4 py-2">
                     <div className="flex space-x-2 justify-between">
                       {!record.users_records_id || record.purchased === true ?
-                        <button className="p-1 bg-blue-500 text-white rounded">Wishlist</button>
+                        <button
+                          className="p-1 bg-blue-500 text-white rounded"
+                          onClick={() => handleAddToList(record, false)}
+                        >Wishlist</button>
                         :
                         null
                       }
                       {!record.users_records_id || record.purchased === false ?
-                        <button className="p-1 bg-green-500 text-white rounded">Buy</button>
+                        <button
+                          className="p-1 bg-green-500 text-white rounded"
+                          onClick={() => handleAddToList(record, true)}
+                        >Collection</button>
                         :
                         null
                       }

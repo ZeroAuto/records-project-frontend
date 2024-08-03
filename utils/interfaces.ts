@@ -29,6 +29,12 @@ interface SignUpParams extends LoginParams {
   name: string,
 }
 
+interface UserRecord {
+  purchased: boolean,
+  record_id: number,
+  user_id: number,
+}
+
 export {
   Album,
   RecordParams,

@@ -1,5 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
-import { FilterParams, RecordParams, RecordPostParams, SignUpParams } from './interfaces.ts';
+import { 
+  FilterParams,
+  RecordParams,
+  RecordPostParams,
+  SignUpParams, 
+  UserRecord,
+} from './interfaces.ts';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -120,6 +126,20 @@ export const postUserRecord = async (
     return false;
   }
 };
+
+export const updateUserRecord = async (id: number, userRecordData: UserRecord): Promise<AxiosResponse|false> =>{
+  try {
+    const res = await axios.put(
+      `${baseUrl}/user_record/${id}`,
+      { ...userRecordData },
+      { headers: getHeaders() },
+    )
+    return res.data;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
 
 export const removeUserRecord = async (user_record_id: number) => {
   try {
