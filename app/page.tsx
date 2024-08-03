@@ -27,8 +27,9 @@ const Home: React.FC = () => {
       setLoading(true);
       const offset = nextPage && displayCount < totalCount ? displayCount : 0;
       if (!nextPage) setDisplayCount(0);
+      const limit = currentUser ? 15 : 20;
 
-      const queryParams = { searchTerm, sortColumn, sortDirection, offset };
+      const queryParams = { searchTerm, sortColumn, sortDirection, offset, limit };
       if (queryType !== 'all' && currentUser) queryParams.purchased = queryType === 'purchased';
       const res = currentUser ? await fetchUserRecords(queryParams) : await fetchRecords(queryParams);
       
