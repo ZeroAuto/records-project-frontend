@@ -58,26 +58,26 @@ const DataTable: React.FC<DataTableProps> = ({
                 <div className="flex space-x-2 justify-between">
                   {!record.users_records_id || record.purchased === true ? (
                     <button
-                      className="p-1 bg-blue-500 text-white rounded"
+                      className="px-2 bg-blue-500 text-white rounded"
                       onClick={() => handleAddToList(record, false)}
                     >
-                      Wishlist
+                      +
                     </button>
                   ) : null}
                   {!record.users_records_id || record.purchased === false ? (
                     <button
-                      className="p-1 bg-green-500 text-white rounded"
+                      className="px-2 bg-green-500 text-white rounded"
                       onClick={() => handleAddToList(record, true)}
                     >
-                      Collection
+                      $
                     </button>
                   ) : null}
                   {record.users_records_id && (
                     <button
-                      className="p-1 bg-red-500 text-white rounded"
+                      className="px-2 bg-red-500 text-white rounded"
                       onClick={() => handleRemove(record.users_records_id)}
                     >
-                      Remove
+                      x
                     </button>
                   )}
                 </div>
