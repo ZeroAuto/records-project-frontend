@@ -194,7 +194,7 @@ export const signup = async (signUpData: SignUpParams): Promise<AxiosResponse> =
       `${baseUrl}/signup`,
       signUpData,
     )
-    return res;
+    return res.data;
   } catch (e: any) {
     console.log(e);
     throwError(e);

@@ -23,8 +23,7 @@ const Signup: React.FC = () => {
     try {
       setError('');
       const signupData = { email, name, password, username };
-      const res = await signup(signupData);
-      const userInfo = res.data;
+      const userInfo = await signup(signupData);
       if (userInfo) {
         sessionStorage.setItem('userInfo', JSON.stringify(userInfo));
         setCurrentUser(userInfo);
