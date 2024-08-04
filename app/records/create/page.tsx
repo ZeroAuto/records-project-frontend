@@ -29,6 +29,7 @@ const Record: React.FC = () => {
   const [ format, setFormat ] = useState<string>('');
   const [ purchased, setPurchased ] = useState<boolean>(false);
   const [ selectedRecord, setSelectedRecord ] = useState<Album>({});
+  const [ error, setError ] = useState<string>('');
 
   useEffect(() => {
     const fetchRecordData = async (recordData: RecordParams) => {
@@ -49,9 +50,11 @@ const Record: React.FC = () => {
   const handleWishlist = async (purchased: boolean = false) => {
     try {
       setLoading(true);
+      setError('');
       const record = await postUserRecord(selectedRecord.id, purchased);
       if (record) router.push('/');
     } catch (error) {
+      setError(error);
       console.log(error);
     } finally {
       setLoading(false);

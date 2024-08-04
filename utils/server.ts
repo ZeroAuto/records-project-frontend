@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { 
   FilterParams,
+  LoginParams,
   RecordParams,
   RecordPostParams,
   SignUpParams, 
@@ -55,7 +56,7 @@ axios.interceptors.response.use(
   }
 );
 
-export const getHeaders = () => {
+const getHeaders = () => {
   const userInfo = JSON.parse(sessionStorage.getItem('userInfo'));
   if (userInfo && userInfo.access_token) {
     return { Authorization: `Bearer ${userInfo.access_token}` };
@@ -63,40 +64,76 @@ export const getHeaders = () => {
   return {};
 }
 
-export const findRecord = async (recordData: RecordParams): Promise<AxiosResponse|false> => {
-  const res = await axios.get(
-    `${baseUrl}/record/find`,
-    {
-      headers: getHeaders(),
-      params: { ...recordData },
-    }
-  );
-  return res.data;
+const throwError = (e: any, defaultMsg: string = "Something went wrong") => {
+  if (e?.response?.data?.message) {
+    throw new Error(e.response.data.message);
+  } else {
+    throw new Error(defaultMsg);
+  }
+};
+
+export const findRecord = async (recordData: RecordParams): Promise<AxiosResponse> => {
+  try {
+    const res = await axios.get(
+      `${baseUrl}/record/find`,
+      {
+        headers: getHeaders(),
+        params: { ...recordData },
+      }
+    );
+    return res.data;
+  } catch (e: any) {
+    console.log(e);
+    throwError(e);
+  }
 }
 
-export const fetchRecords = async (filterParams: FilterParams): Promise<AxiosResponse|false> => {
-  const res = await axios.get(
-    `${baseUrl}/record`,
-    {
-      headers: getHeaders(),
-      params: { ...filterParams },
-    }
-  );
-  return res;
+export const fetchRecords = async (filterParams: FilterParams): Promise<AxiosResponse> => {
+  try {
+    const res = await axios.get(
+      `${baseUrl}/record`,
+      {
+        headers: getHeaders(),
+        params: { ...filterParams },
+      }
+    );
+    return res;
+  } catch (e: any) {
+    console.log(e);
+    throwError(e);
+  }
 }
 
-export const fetchUserRecords = async (filterParams: FilterParams): Promise<AxiosResponse|false> => {
-  const res = await axios.get(
-    `${baseUrl}/record/user`,
-    {
-      headers: getHeaders(),
-      params: { ...filterParams },
-    }
-  );
-  return res;
+export const fetchUserRecords = async (filterParams: FilterParams): Promise<AxiosResponse> => {
+  try {
+    const res = await axios.get(
+      `${baseUrl}/record/user`,
+      {
+        headers: getHeaders(),
+        params: { ...filterParams },
+      }
+    );
+    return res;
+  } catch (e: any) {
+    console.log(e);
+    throwError(e);
+  }
 }
 
-export const postRecord = async (recordData: RecordPostParams): Promise<AxiosResponse|false> => {
+export const login = async (loginData: LoginParams): Promise<AxiosResponse> => {
+  try {
+    const res = await axios.post(
+      `${baseUrl}/login`,
+      { ...loginData },
+    )
+    return res.data;
+  } catch (e: any) {
+    console.log(e);
+    throwError(e);
+  }
+}
+
+export const postRecord = async (recordData: RecordPostParams): Promise<AxiosResponse> => {
   try {
     const res = await axios.post(
       `${baseUrl}/record`,
@@ -106,14 +143,14 @@ export const postRecord = async (recordData: RecordPostParams): Promise<AxiosRes
     return res.data;
   } catch (e) {
     console.log(e);
-    return false;
+    throwError(e);
   }
 };
 
 export const postUserRecord = async (
   record_id: number,
   purchased: boolean = false
-): Promise<AxiosResponse|false> => {
+): Promise<AxiosResponse> => {
   try {
     const res = await axios.post(
       `${baseUrl}/user_record`,
@@ -123,11 +160,11 @@ export const postUserRecord = async (
     return res.data;
   } catch (e) {
     console.log(e);
-    return false;
+    throwError(e);
   }
 };
 
-export const updateUserRecord = async (id: number, userRecordData: UserRecord): Promise<AxiosResponse|false> =>{
+export const updateUserRecord = async (id: number, userRecordData: UserRecord): Promise<AxiosResponse> =>{
   try {
     const res = await axios.put(
       `${baseUrl}/user_record/${id}`,
@@ -137,29 +174,29 @@ export const updateUserRecord = async (id: number, userRecordData: UserRecord): 
     return res.data;
   } catch (e) {
     console.log(e);
-    return false;
+    throwError(e);
   }
 }
 
-export const removeUserRecord = async (user_record_id: number) => {
+export const removeUserRecord = async (user_record_id: number): Promise<AxiosResponse> => {
   try {
     const res = await axios.delete(`${baseUrl}/user_record/${user_record_id}`);
     return res.data;
   } catch (e) {
     console.log(e);
-    return false;
+    throwError(e);
   }
 };
 
-export const signup = async (signUpData: SignUpParams): Promise<AxiosResponse|false> => {
+export const signup = async (signUpData: SignUpParams): Promise<AxiosResponse> => {
   try {
     const res = await axios.post(
       `${baseUrl}/signup`,
       signUpData,
     )
     return res;
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
-    return false;
+    throwError(e);
   }
 };
