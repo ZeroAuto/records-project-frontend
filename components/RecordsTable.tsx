@@ -69,7 +69,7 @@ const DataTable: React.FC<DataTableProps> = ({
                         icon={faPlus} 
                       />
                       <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100">
-                        {queryType === 'all' ? 'Add to Wishlist' : 'Move to Wishlist'}
+                        {!record.users_records_id ? 'Add to Wishlist' : 'Move to Wishlist'}
                       </span>
                     </button>
                   ) : null}
@@ -83,7 +83,7 @@ const DataTable: React.FC<DataTableProps> = ({
                         icon={faDollarSign} 
                       />
                       <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100">
-                        {queryType === 'all' ? 'Add to Collection' : 'Move to Collection'}
+                        {!record.users_records_id ? 'Add to Collection' : 'Move to Collection'}
                       </span>
                     </button>
                   ) : null}
@@ -97,7 +97,7 @@ const DataTable: React.FC<DataTableProps> = ({
                         icon={faTimes} 
                       />
                       <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100">
-                        Remove from List
+                        {record.purchased ? 'Remove from Collection' : 'Remove from Wishlist'}
                       </span>
                     </button>
                   )}
