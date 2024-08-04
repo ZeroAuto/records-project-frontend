@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Album, UserRecord } from '../utils/interfaces.ts';
 
 interface DataTableProps {

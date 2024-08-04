@@ -148,14 +148,18 @@ const Record: React.FC = () => {
             >
               Format
             </label>
-            <input
-              type="text"
+            <select
               className="form-input-field"
               id="format"
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setFormat(e.target.value)}
-              placeholder="Format"
+              onChange={(e: ChangeEvent<HTMLSelectElement>) => setFormat(e.target.value)}
               value={format}
-            />
+            >
+              <option value="">Select Format</option>
+              <option value="LP">LP</option>
+              <option value="Single">Single</option>
+              <option value="EP">EP</option>
+              <option value="Boxed Set">Boxed Set</option>
+            </select>
             <label
               className="block text-sm font-medium mb-1"
               htmlFor="year"
