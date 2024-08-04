@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import React, { useCallback, useContext, useEffect, useState, ChangeEvent } from 'react';
-import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -14,6 +14,10 @@ import RecordsTable from '../components/RecordsTable';
 
 const Home: React.FC = () => {
   const { currentUser } = useContext(UserContext);
+  
+  const router = useRouter();
+  const queryTypeParam = router.query?.queryType as string || 'all';
+
   const [ displayCount, setDisplayCount ] = useState<number>(0);
   const [ loading, setLoading ] = useState<Boolean>(false);
   const [ records, setRecords ] = useState<Album[]>([]);
@@ -159,6 +163,7 @@ const Home: React.FC = () => {
           handleAddToList={handleAddToList}
           handleRemove={handleRemove}
           currentUser={currentUser}
+          queryType={queryType}
         />
       }
       {displayCount === 0 && !loading &&
