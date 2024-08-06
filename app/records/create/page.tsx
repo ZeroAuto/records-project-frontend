@@ -5,6 +5,7 @@ import axios from 'axios';
 import React, { useContext, useEffect, useLayoutEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
+import BackButton from '../../../components/BackButton';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import { UserContext } from '../../../contexts/UserContext';
 import RecordForm from '../../../components/RecordForm';
@@ -85,9 +86,16 @@ const Record: React.FC = () => {
     }
   };
 
+  const handleBack = () => {
+    router.push('/');
+  }
+
   return (
     <div className="max-w-lg mx-auto">
-      <div>
+      <div className="flex mb-4">
+        <div onClick={handleBack}>
+          <BackButton />
+        </div>
       </div>
       <div className="flex justify-center items-start h-screen">
         {loading ?

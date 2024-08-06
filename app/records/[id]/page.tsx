@@ -3,8 +3,9 @@
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-import LoadingSpinner from '../../../components/LoadingSpinner';
 import BackButton from '../../../components/BackButton';
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import RecordForm from '../../../components/RecordForm';
 import { UserContext } from '../../../contexts/UserContext';
 import { fetchRecord } from '../../../utils/server.ts';
 
@@ -16,12 +17,28 @@ const Record = ({ params }) => {
   const [ loading, setLoading ] = useState(false);
   const [ error, setError ] = useState('');
   const [ editing, setEditing ] = useState(false);
+  const [ name, setName ] = useState<string>('');
+  const [ artist, setArtist ] = useState<string>('');
+  const [ year, setYear ] = useState<string>('');
+  const [ format, setFormat ] = useState<string>('');
+  const [ purchased, setPurchased ] = useState<boolean>(false);
+  const [ albumArt, setAlbumArt ] = useState('');
+  const [ selectedRecord, setSelectedRecord ] = useState<Album>({});
+
+  const setRecordData = (record) => {
+    setName(record.name);
+    setArtist(record.artist_name);
+    setFormat(record.format);
+    setYear(record.year);
+    setPurchased(record.purchased)
+  }
   
   const getData = async () => {
     try {
       setLoading(true);
       const res = await fetchRecord(id);
       setRecord(res);
+      setRecordData(res);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -33,6 +50,12 @@ const Record = ({ params }) => {
     getData();
   }, []);
 
+  useEffect(() => {
+    if (editing && record) {
+      setRecordData(record);
+    }
+  }, [editing])
+
   const handleBack = () => {
     router.push('/');
   };
@@ -40,6 +63,10 @@ const Record = ({ params }) => {
   const handleEditToggle = () => {
     setEditing(!editing);
   };
+
+  const handleUpdate = async () => {};
+
+  const handleWishlist = async () => {};
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -64,7 +91,25 @@ const Record = ({ params }) => {
       {!loading && record &&
         <div>
           {editing ?
-            null
+            <RecordForm
+              editing={false}
+              name={name}
+              artist={artist}
+              format={format}
+              year={year}
+              albumArt={albumArt}
+              purchased={purchased}
+              selectedRecord={selectedRecord}
+              setName={setName}
+              setArtist={setArtist}
+              setFormat={setFormat}
+              setYear={setYear}
+              setAlbumArt={setAlbumArt}
+              setPurchased={setPurchased}
+              handleAdd={handleUpdate}
+              handleWishlist={handleWishlist}
+              error={error}
+            />
             :
             <div>
               <p>
