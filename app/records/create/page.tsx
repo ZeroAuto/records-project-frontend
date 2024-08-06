@@ -28,6 +28,7 @@ const Record: React.FC = () => {
   const [ year, setYear ] = useState<string>('');
   const [ format, setFormat ] = useState<string>('');
   const [ purchased, setPurchased ] = useState<boolean>(false);
+  const [ albumArt, setAlbumArt ] = useState('');
   const [ selectedRecord, setSelectedRecord ] = useState<Album>({});
   const [ error, setError ] = useState<string>('');
 
@@ -71,6 +72,7 @@ const Record: React.FC = () => {
         year: year,
         format: format,
         purchased: purchased,
+        album_art_url: albumArt,
       }
       const record = await postRecord(recordData);
       if (record) router.push('/');
@@ -158,7 +160,7 @@ const Record: React.FC = () => {
               value={format}
             >
               <option value="">Select Format</option>
-              <option value="LP">LP</option>
+              <option value="Album">Album</option>
               <option value="Single">Single</option>
               <option value="EP">EP</option>
               <option value="Boxed Set">Boxed Set</option>
@@ -175,6 +177,19 @@ const Record: React.FC = () => {
               onChange={(e: ChangeEvent<HTMLInputElement>) => setYear(e.target.value)}
               placeholder="Year"
               value={year}
+            />
+            <label
+              className="block text-sm font-medium mb-1"
+              htmlFor="album_art"
+            >
+              Link to Album Art
+            </label>
+            <input
+              type="text"
+              className="form-input-field"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setAlbumArt(e.target.value)}
+              placeholder="URL"
+              value={albumArt}
             />
             <div className="flex items-center mb-4">
               <input

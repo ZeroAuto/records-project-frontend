@@ -6,7 +6,8 @@ interface RecordParams {
 interface RecordPostParams extends RecordParams {
   format: string;
   year: number;
-  purchased: boolean,
+  purchased: boolean;
+  album_art_url: string;
 }
 
 interface Album extends RecordPostParams {

@@ -145,6 +145,7 @@ export const login = async (loginData: LoginParams): Promise<AxiosResponse> => {
 
 export const postRecord = async (recordData: RecordPostParams): Promise<AxiosResponse> => {
   try {
+    console.log(recordData);
     const res = await axios.post(
       `${baseUrl}/record`,
       { ...recordData },
