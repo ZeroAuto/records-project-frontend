@@ -90,7 +90,10 @@ export const findRecord = async (recordData: RecordParams): Promise<AxiosRespons
 
 export const fetchRecord = async (recordId: number): Promise<AxiosResponse> => {
   try {
-    const res = await axios.get(`${baseUrl}/record/${recordId}`);
+    const res = await axios.get(
+      `${baseUrl}/record/${recordId}`,
+      { headers: getHeaders() },
+    );
     return res.data;
   } catch (e: any) {
     console.log(e);
