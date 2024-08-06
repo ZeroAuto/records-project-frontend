@@ -189,6 +189,8 @@ export const updateUserRecord = async (id: number, userRecordData: UserRecord): 
   }
 }
 
+export const updateRecord = async (id: number, userRecordData: UserRecord): Promise<AxiosResponse> => {};
+
 export const removeUserRecord = async (user_record_id: number): Promise<AxiosResponse> => {
   try {
     const res = await axios.delete(`${baseUrl}/user_record/${user_record_id}`);

@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import LoadingSpinner from '../../../components/LoadingSpinner';
+import BackButton from '../../../components/BackButton';
 import { UserContext } from '../../../contexts/UserContext';
 import { fetchRecord } from '../../../utils/server.ts';
 
@@ -43,15 +44,11 @@ const Record = ({ params }) => {
   return (
     <div className="max-w-2xl mx-auto">
       <div className="flex justify-between mb-4 align-middle">
-        <button 
-          class="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+        <div
           onClick={handleBack}
         >
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
-          Back
-        </button>
+          <BackButton onClick={handleBack} />
+        </div>
         {currentUser?.admin &&
           <button
             className="primary-button px-3"
