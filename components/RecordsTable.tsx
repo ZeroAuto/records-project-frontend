@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faDollarSign, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from 'next/navigation';
 import { Album, UserRecord } from '../utils/interfaces.ts';
 
 interface DataTableProps {
@@ -24,6 +25,11 @@ const DataTable: React.FC<DataTableProps> = ({
   currentUser,
   queryType,
 }) => {
+  const router = useRouter();
+  const handleGoToRecord = recordId => {
+    router.push(`/records/${recordId}`);
+  }
+
   return (
     <table className="min-w-full bg-gray-700 rounded mb-4">
       <thead>
@@ -47,7 +53,11 @@ const DataTable: React.FC<DataTableProps> = ({
       </thead>
       <tbody>
         {records.map((record) => (
-          <tr key={record.id}>
+          <tr 
+            className="cursor-pointer"
+            key={record.id}
+            onClick={() => handleGoToRecord(record.id)}
+          >
             <td className="px-4 py-2 max-w-72 overflow-hidden whitespace-nowrap hover:overflow-visible hover:whitespace-normal">
               {record.name}
             </td>
