@@ -88,6 +88,16 @@ export const findRecord = async (recordData: RecordParams): Promise<AxiosRespons
   }
 }
 
+export const fetchRecord = async (recordId: number): Promise<AxiosResponse> => {
+  try {
+    const res = await axios.get(`${baseUrl}/record/${recordId}`);
+    return res.data;
+  } catch (e: any) {
+    console.log(e);
+    throwError(e);
+  }
+}
+
 export const fetchRecords = async (filterParams: FilterParams): Promise<AxiosResponse> => {
   try {
     const res = await axios.get(
