@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faDollarSign, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
-import { Album, UserRecord } from '../utils/interfaces.ts';
+import { Album } from '../utils/interfaces.ts';
 
 interface DataTableProps {
   records: Album[];
