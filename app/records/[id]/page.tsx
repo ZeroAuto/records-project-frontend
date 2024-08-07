@@ -76,7 +76,6 @@ const Record = ({ params }) => {
         album_art_url: albumArt,
       }
       const res = await updateRecord(id, recordData);
-      console.table(res);
       if (res) {
         setRecord(res);
         setEditing(false);
