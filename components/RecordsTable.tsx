@@ -56,16 +56,27 @@ const DataTable: React.FC<DataTableProps> = ({
           <tr 
             className="cursor-pointer"
             key={record.id}
-            onClick={() => handleGoToRecord(record.id)}
           >
-            <td className="px-4 py-2 max-w-72 overflow-hidden whitespace-nowrap hover:overflow-visible hover:whitespace-normal">
+            <td
+              className="px-4 py-2 max-w-72 overflow-hidden whitespace-nowrap hover:overflow-visible hover:whitespace-normal"
+              onClick={() => handleGoToRecord(record.id)}
+            >
               {record.name}
             </td>
-            <td className="px-4 py-2 max-w-64 overflow-hidden whitespace-nowrap hover:overflow-visible hover:whitespace-normal">
+            <td
+              className="px-4 py-2 max-w-64 overflow-hidden whitespace-nowrap hover:overflow-visible hover:whitespace-normal"
+              onClick={() => handleGoToRecord(record.id)}
+            >
               {record.artist_name}
             </td>
-            <td className="px-4 py-2">{record.year}</td>
-            <td className="px-4 py-2">{record.format}</td>
+            <td
+              className="px-4 py-2"
+              onClick={() => handleGoToRecord(record.id)}
+            >{record.year}</td>
+            <td 
+              className="px-4 py-2"
+              onClick={() => handleGoToRecord(record.id)}
+            >{record.format}</td>
             {currentUser && (
               <td className="px-4 py-2">
                 <div className="flex space-x-2 justify-center">

@@ -23,7 +23,7 @@ const RecordForm: React.FC<RecordFormProps> = ({
   return (
     <div className="bg-gray-700 p-8 rounded-md shadow-md w-full">
       <h1 className="text-2xl mb-4">Add Record</h1>
-      {Object.keys(selectedRecord).length > 0 ? 
+      {Object.keys(selectedRecord).length && !editing > 0 ? 
         !selectedRecord.owned_by_user ?
           (
             <div className="mb-4 p-4 bg-green-300 text-green-900 rounded border-green-900">

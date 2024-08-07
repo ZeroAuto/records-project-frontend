@@ -31,6 +31,7 @@ const Record = ({ params }) => {
     setFormat(record.format);
     setYear(record.year);
     setPurchased(record.purchased)
+    setAlbumArt(record.album_art_url)
   }
   
   const getData = async () => {
@@ -65,8 +66,6 @@ const Record = ({ params }) => {
   };
 
   const handleUpdate = async () => {};
-
-  const handleWishlist = async () => {};
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -107,23 +106,25 @@ const Record = ({ params }) => {
               setAlbumArt={setAlbumArt}
               setPurchased={setPurchased}
               handleAdd={handleUpdate}
-              handleWishlist={handleWishlist}
+              handleWishlist={() => {}}
               error={error}
             />
             :
-            <div>
-              <p>
-                {record.name}
-              </p>
-              <p>
-                {record.artist_name}
-              </p>
-              {record?.album_art_url &&
-                <p>
-                  {record.album_art_url}
-                </p>
-              }
+          <div className="max-w-sm mx-auto bg-gray-800 border border-gray-700 rounded-lg shadow-lg overflow-hidden">
+            {record?.album_art_url &&
+              <img
+                className="w-full h-48 object-cover"
+                src={record.album_art_url}
+                alt={`Artwork for ${record.name}`}
+              />
+            }
+            <div className="p-4">
+              <h2 className="text-xl font-semibold text-white">{record.name}</h2>
+              <p className="text-gray-300">{record.artist_name}</p>
+              <p className="text-gray-400 text-sm">{record.year}</p>
+              <p className="text-gray-500 text-xs">{record.format}</p>
             </div>
+          </div>
           }
         </div>
       }
