@@ -98,16 +98,18 @@ const RecordForm: React.FC<RecordFormProps> = ({
         placeholder="URL"
         value={albumArt}
       />
-      <div className="flex items-center mb-4">
-        <input
-          type="checkbox"
-          id="wishlist"
-          className="mr-2"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setPurchased(e.target.checked)}
-          checked={purchased}
-        />
-        <label htmlFor="wishlist" className="text-sm">Add to Collection</label>
-      </div>
+      {!editing &&
+        <div className="flex items-center mb-4">
+          <input
+            type="checkbox"
+            id="wishlist"
+            className="mr-2"
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setPurchased(e.target.checked)}
+            checked={purchased}
+          />
+          <label htmlFor="wishlist" className="text-sm">Add to Collection</label>
+        </div>
+      }
       <button
         className="w-full primary-button"
         disabled={Object.keys(selectedRecord).length > 0}

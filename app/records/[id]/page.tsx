@@ -7,7 +7,7 @@ import BackButton from '../../../components/BackButton';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import RecordForm from '../../../components/RecordForm';
 import { UserContext } from '../../../contexts/UserContext';
-import { fetchRecord } from '../../../utils/server.ts';
+import { fetchRecord, updateRecord } from '../../../utils/server.ts';
 
 const Record = ({ params }) => {
   const { id } = params;
@@ -65,7 +65,28 @@ const Record = ({ params }) => {
     setEditing(!editing);
   };
 
-  const handleUpdate = async () => {};
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
+      const recordData = {
+        name: name,
+        artist: artist,
+        year: year,
+        format: format,
+        album_art_url: albumArt,
+      }
+      const res = await updateRecord(id, recordData);
+      console.table(res);
+      if (res) {
+        setRecord(res);
+        setEditing(false);
+      }
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -91,7 +112,7 @@ const Record = ({ params }) => {
         <div>
           {editing ?
             <RecordForm
-              editing={false}
+              editing={true}
               name={name}
               artist={artist}
               format={format}
