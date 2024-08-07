@@ -117,22 +117,6 @@ export const fetchRecords = async (filterParams: FilterParams): Promise<AxiosRes
   }
 }
 
-export const fetchUserRecords = async (filterParams: FilterParams): Promise<AxiosResponse> => {
-  try {
-    const res = await axios.get(
-      `${baseUrl}/record/user`,
-      {
-        headers: getHeaders(),
-        params: { ...filterParams },
-      }
-    );
-    return res;
-  } catch (e: any) {
-    console.log(e);
-    throwError(e);
-  }
-}
-
 export const login = async (loginData: LoginParams): Promise<AxiosResponse> => {
   try {
     const res = await axios.post(
@@ -190,9 +174,17 @@ export const updateUserRecord = async (id: number, userRecordData: UserRecord): 
     console.log(e);
     throwError(e);
   }
-}
+};
 
-export const updateRecord = async (id: number, userRecordData: UserRecord): Promise<AxiosResponse> => {};
+// export const updateRecord = async (id: number, recordData: UserRecord): Promise<AxiosResponse> => {
+//   try {
+//     const res = await axios.put(
+//       `${baseUrl}/record/${id}`,
+//       { ...recordData },
+//       { headers: getHeaders() },
+//     )
+//   }
+// };
 
 export const removeUserRecord = async (user_record_id: number): Promise<AxiosResponse> => {
   try {

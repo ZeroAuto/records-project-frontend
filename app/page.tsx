@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { UserContext } from '../contexts/UserContext';
 
 import { Album, RecordPostParams, UserRecord } from '../utils/interfaces.ts';
-import { fetchRecords, fetchUserRecords, postUserRecord, removeUserRecord, updateUserRecord } from '../utils/server.ts';
+import { fetchRecords, postUserRecord, removeUserRecord, updateUserRecord } from '../utils/server.ts';
 import RecordsTable from '../components/RecordsTable';
 
 const Home: React.FC = () => {
@@ -44,7 +44,7 @@ const Home: React.FC = () => {
 
       const queryParams = { searchTerm, sortColumn, sortDirection, offset, limit: tempLimit };
       if (queryType !== 'all' && currentUser) queryParams.purchased = queryType === 'purchased';
-      const res = currentUser ? await fetchUserRecords(queryParams) : await fetchRecords(queryParams);
+      const res = await fetchRecords(queryParams);
       
       setTotalCount(res.headers['x-total-count']);
 
