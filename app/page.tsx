@@ -34,8 +34,9 @@ const Home: React.FC = () => {
       let tempLimit = limit;
 
       if (!nextPage) {
-        const windowHeight = window.innerHeight - 300;
-        tempLimit = Math.floor(currentUser ? windowHeight / 48 : windowHeight / 40);
+        const offset = currentUser ? 300 : 220
+        const tableMaxHeight = window.innerHeight - offset;
+        tempLimit = Math.floor(tableMaxHeight / 64);
         setLimit(tempLimit);
       }
 

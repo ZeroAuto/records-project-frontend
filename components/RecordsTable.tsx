@@ -34,7 +34,7 @@ const DataTable: React.FC<DataTableProps> = ({
     <table className="min-w-full bg-gray-700 rounded mb-4">
       <thead>
         <tr>
-          {['name', 'artist', 'year', 'format'].map((column) => (
+          {['', 'name', 'artist', 'year', 'format'].map((column) => (
             <th
               key={column}
               className="px-4 py-2 cursor-pointer"
@@ -57,14 +57,28 @@ const DataTable: React.FC<DataTableProps> = ({
             className="cursor-pointer"
             key={record.id}
           >
+            <td 
+              className="px-4 py-2"
+              onClick={() => handleGoToRecord(record.id)}
+            >
+              {record.album_art_url ? (
+                <img
+                  src={record.album_art_url}
+                  alt={`${record.name} album art`}
+                  className="w-12 h-12 object-cover rounded"
+                />
+              ) : (
+                <div className="w-12 h-12 bg-gray-400 rounded"></div>
+              )}
+            </td>
             <td
-              className="px-4 py-2 max-w-72 overflow-hidden whitespace-nowrap hover:overflow-visible hover:whitespace-normal"
+              className="px-4 py-2 max-w-72"
               onClick={() => handleGoToRecord(record.id)}
             >
               {record.name}
             </td>
             <td
-              className="px-4 py-2 max-w-64 overflow-hidden whitespace-nowrap hover:overflow-visible hover:whitespace-normal"
+              className="px-4 py-2 max-w-64"
               onClick={() => handleGoToRecord(record.id)}
             >
               {record.artist_name}
